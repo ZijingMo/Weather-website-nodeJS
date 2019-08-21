@@ -3,13 +3,15 @@ const express = require('express')
 const hbs = require('hbs')
 const geocode = require('./utils/geocode')
 const forecast = require('./utils/forecase')
-
-const app = express() // Load express module
+const app = express() 
 
 // Define paths for Express cofig
-const publicDirectoryPath = path.join(__dirname, '../public') // Navigate public files path
-const viewsPath = path.join(__dirname, '../templates/views') // Navigate handlebar 'view' path
-const partialsPath = path.join(__dirname, '../templates/partials') // Navigate handlebar 'partials' path
+// Navigate public files path
+const publicDirectoryPath = path.join(__dirname, '../public') 
+// Navigate handlebar 'view' path
+const viewsPath = path.join(__dirname, '../templates/views') 
+// Navigate handlebar 'partials' path
+const partialsPath = path.join(__dirname, '../templates/partials') 
 
 // Setup handlebars engine and views location
 app.set('view engine', 'hbs') // Handlerbar setup
@@ -56,9 +58,9 @@ app.get('/weather', (req, res) => {
     if (!inputLocation) {
         console.log("Please input an address for our system >.<")
     } else {
-        geocode(inputLocation, (error, {latitude, longitude, location}) => {
+        geocode(inputLocation, (error, {latitude, longitude, location} = {}) => {
             if (error) {
-                return res.send({ error }) //It will stop the function execution when error appears in geocode
+                return res.send({ error })
             }
             forecast(latitude, longitude, (error, forecastData) => {
                 if(error) {
@@ -71,24 +73,25 @@ app.get('/weather', (req, res) => {
                     forecast: forecastData,
                     address: req.query.address
                 })
-              })
+            })
         })
     }
 })
 
-app.get('/products', (req, res) => {
-    if (!req.query.search) {
-        return res.send({
-            error: 'You must provide a search term'
-        })
-    }  
-    console.log(req.query.search)
-    res.send({
-        products:[]
-    })
-})
+// Products page
+// app.get('/products', (req, res) => {
+//     if (!req.query.search) {
+//         return res.send({
+//             error: 'You must provide a search term'
+//         })
+//     }  
+//     console.log(req.query.search)
+//     res.send({
+//         products:[]
+//     })
+// })
 
-// 'help-404' handlebar
+// 'help/404' handlebar
 app.get('/help/*', (req, res) => {
     res.render('404', {
         title: '404',
